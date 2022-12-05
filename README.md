@@ -1,13 +1,9 @@
 ### Golden Time
 ##### CASA0016
 ---
-When do you focus?
-
-![Attention level throughout the day](./resource/focusLevelGraph.png)
 
 Factors
 - Time
-- Location
 - Temperature
 - Humidity
 - Air Quality
