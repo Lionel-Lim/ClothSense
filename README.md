@@ -168,7 +168,7 @@ Introduced the mounting bracket
 
 Result
 
-![](./resource/img/demo.mov)
+https://github.com/Lionel-Lim/ClothSense/blob/main/resource/img/demo.mov
 
 ![](./resource/img/topView.jpeg)  
 
