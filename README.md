@@ -8,7 +8,7 @@ DY Lim
 
   
 
-![](http://localhost:9425/images/c1b11536-7deb-4060-b856-c49acf1203f5.jpeg)
+![](./resource/img/hanger.jpeg)
 
 ## When is it going to be dried?
 
@@ -57,7 +57,7 @@ ClothSense is going to **show:**
 
 ## Workflow
 
-![](http://localhost:9425/images/65b1f9c9-5059-4b16-b5ae-42253287b557.png)
+![](./resource/img/Process.drawio.png)
 
   
 
@@ -65,13 +65,13 @@ ClothSense is going to **show:**
 
 ### First Prototype
 
-![](http://localhost:9425/images/a965379b-d051-42b9-ae5d-6bfdb4b226b5.png)  
+![](./resource/img/firstPrototype.png)  
 
 Tested Fan Control using PWM control
 
 By pressing button, Uno changes fan speed for noise control.
 
-![](http://localhost:9425/images/55688d8f-8f8c-4ddb-87db-3514510ee90c.png)  
+![](./resource/img/pwm.png)  
 
 [Arduino PWM Tutorial - Arduino Project Hub](https://create.arduino.cc/projecthub/muhammad-aqib/arduino-pwm-tutorial-ae9d71)  
 
@@ -79,7 +79,7 @@ By pressing button, Uno changes fan speed for noise control.
 
 ### Second Prototype
 
-![](http://localhost:9425/images/1213f4df-0544-4aa9-a8c4-c65307eda173.png)  
+![](./resource/img/impressionRef.png)  
 
 [Old-fashioned vintage radio isolated on a white background - | CanStock (canstockphoto.com)](https://www.canstockphoto.com/old-fashioned-vintage-radio-isolated-on-82587771.html)  
 
@@ -87,7 +87,7 @@ Inspired by the old fashion radios, got the idea from Prof. Andy.
 
   
 
-![](http://localhost:9425/images/982c5723-b4ff-43a7-ab0e-ef83bd6093bc.png)  
+![](./resource/img/secondPrototypeBlender.png)  
 
 3D Printing Enclosure
 
@@ -105,9 +105,9 @@ Changed sie
 
 ### Third Prototype
 
-![](http://localhost:9425/images/abc93835-26d8-4c76-951c-06ebfb5f4913.png)  
+![](./resource/img/thirdPrototypeBlender.png)  
 
-![](http://localhost:9425/images/d88af8ba-775a-4ee6-9d4f-5a50a94d498d.jpeg)  
+![](./resource/img/lasercut.jpeg)  
 
 Laser cut wood enclosure
 
@@ -131,7 +131,7 @@ with the enclosure, the device was tested and some problems are found:
 3. Did not design the component mounting
 
 - Made some mounting brackets
-- ![](http://localhost:9425/images/5f301b1e-915b-435e-95f6-9ef12db263cf.jpeg)  
+- ![](./resource/img/lasercutBracket.jpeg  
     
 
   
@@ -140,43 +140,43 @@ with the enclosure, the device was tested and some problems are found:
 
 Modularised parts
 
-![](http://localhost:9425/images/1ce0a8f7-6a10-4c30-b78e-c392fd43dba1.jpeg) ![](http://localhost:9425/images/1c0e3eff-6608-427f-9409-922dc34b161a.jpeg)
+![](./resource/img/powerPanel.jpeg) 
 
   
 
 Used DHT22
 
-![](http://localhost:9425/images/ed67920e-300b-444d-84e0-961939e7e633.jpeg)  
+![](./resource/img/dhtAttached.jpeg)  
 
-![](http://localhost:9425/images/4cb51150-4156-4f55-b198-d3ff9d0d71b2.jpeg)  
+![](./resource/img/dhtAttached2.jpeg)  
 
   
 
 Added mesh to prevent the interference between the fan and wires
 
-![](http://localhost:9425/images/bf99227b-b9bc-420b-a301-27ff90cd2668.jpeg)  
+![](./resource/img/meshSupport.jpeg)  
 
-![](http://localhost:9425/images/81d22b71-f546-4fe2-87cd-4b94b15b7248.jpeg)  
+![](./resource/img/fanOnSupport.jpeg)  
 
   
 
 Introduced the mounting bracket
 
-![](http://localhost:9425/images/097a3f5d-d074-4a8a-9289-28d31aa242a5.jpeg)  
+![](./resource/img/fanOnSupport.jpeg)  
 
   
 
 Result
 
-![](http://localhost:9425/images/bd999468-23cf-47e6-8c8c-8b88cf63810d.jpeg)  
+![](./resource/img/demo.mov)
 
-![](http://localhost:9425/images/a7b3d021-064b-484e-85ee-26fd9b698d2b.png)  
+![](./resource/img/topView.jpeg)  
 
-![](http://localhost:9425/images/50d484b1-130d-4fef-9fc4-0c2241c8223c.jpeg)  
+![](./resource/img/workingDemo.png)  
 
-![](http://localhost:9425/images/b55368e4-0d01-4e3d-b6f8-7eba9f8418dd.jpeg)  
+![](./resource/img/underHanger.jpeg)  
 
-![](http://localhost:9425/images/c73377bb-a535-409a-b1ba-858350322714.jpeg)  
+![](./resource/img/onHanger.jpeg)  
 
   
 
@@ -190,11 +190,11 @@ Result
 
 ## Where can it be used?
 
-![](http://localhost:9425/images/71460ba0-4807-41e9-a745-6ed08437ac9c.png)  
+![](./resource/img/foodDrying.png)  
 
 [A Grade Dehydrated Vegetables, Pan India, Packaging Size: 5 Kg at Rs 350/kg in New Delhi (indiamart.com)](https://www.indiamart.com/proddetail/dehydrated-vegetables-24169149248.html)  
 
-![](http://localhost:9425/images/750f08aa-71a3-4f84-9b5e-4d7b0796a330.png)  
+![](./resource/img/coatDrying.png)  
 
 [9 Hat and Coat Storage Ideas When You Don't Have a Coat Closet | Apartment Therapy](https://www.apartmenttherapy.com/9-creative-ways-to-organize-your-coats-and-hats-by-the-door-when-you-dont-have-a-coat-closet-239859)  
 
