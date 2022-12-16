@@ -168,7 +168,7 @@ Introduced the mounting bracket
 
 Result
 
-https://github.com/Lionel-Lim/ClothSense/blob/main/resource/img/demo.mov
+[demo](https://drive.google.com/file/d/1XH3c2ZzTV_dLAC6Vp6ikhxQ3ZIhcOEiU/view?usp=share_link)
 
 ![](./resource/img/topView.jpeg)  
 
@@ -229,3 +229,6 @@ _OctoPrint Login_ (no date). Available at: [http://octopi-prusa-2.celab/login/
 _PWM conflict? One DC servo, one PWM fan motor - Using Arduino / Motors, Mechanics, Power and CNC_ (2020) _Arduino Forum_. Available at: [https://forum.arduino.cc/t/pwm-conflict-one-dc-servo-one-pwm-fan-motor/662796](https://forum.arduino.cc/t/pwm-conflict-one-dc-servo-one-pwm-fan-motor/662796) (Accessed: 3 December 2022).
 
 _UNO R3 | Arduino Documentation_ (no date). Available at: [https://docs.arduino.cc/hardware/uno-rev3](https://docs.arduino.cc/hardware/uno-rev3) (Accessed: 14 December 2022).
+
+## Link
+Github - https://github.com/Lionel-Lim/ClothSense
