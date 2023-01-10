@@ -4,32 +4,23 @@
 #include <SPI.h>
 #include <DHT.h>
 #include <DHT_U.h>
-// #include <Adafruit_Sensor.h>
-// #include "Adafruit_BME680.h"NF
-// #include "Zanshin_BME680.h"  // Include the BME680 Sensor library
-
-#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
-#define MAX_DEVICES 4
 
 // Pinout Setting
 #define CS_PIN    10
 #define DATA_PIN  11
 #define CLK_PIN   13
-#define buttonPin 6  // the number of the pushbutton pin
+#define buttonPin 6 
 #define infoButtonPin 8
-#define pwmPin 3    // the number of the LED pin
-#define DHTPin 4        // on Pin 2 of the Huzzah
-// #define servoPin 6 // the number of the servo motor pin
+#define pwmPin 3
+#define DHTPin 4 
 
-// #define SEALEVELPRESSURE_HPA (1013.25)
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+// Hardware Setting
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
+#define MAX_DEVICES 4
+#define DHTTYPE DHT22   // DHT 22
 
-// Software SPI Setting
 MD_Parola P = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
-// MD_Parola P = MD_Parola(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES);
 DHT dht(DHTPin, DHTTYPE);   // Initialize DHT sensor.
-// BME680_Class BME680;  ///< Create an instance of the BME680 class
-// Adafruit_BME680 bme; // I2C
 
 // LED Config
 uint8_t scrollSpeed = 25;    // default frame delay value
@@ -47,15 +38,13 @@ char defaultNewMessage[Default_SIZE] = { "^  -" };
 bool newMessageAvailable = true;
 
 // variables Setting:
-// Servo servo;
-// const int servoInterval = 80;
 const int ledInterval = 100;
 const int buttonInterval = 50;
-// const int servoMinDegrees = 20;
-// const int servoMaxDegrees = 160;
-const int bmeInterval = 5000;
+const int DHTInterval = 5000;
 const int goToDefaultDisplayInterval = 10000;
+const int countDownInterval = 5000;
 
+char estimatedHHmmTime[BUF_SIZE] = { "" };
 int goToDefaultStatus = 0;
 int buttonState = 1;  // variable for reading the pushbutton status
 int infoButtonState = 1;
@@ -63,160 +52,213 @@ int buttonLevel;
 int lastButtonState = 1;
 int lastInfoButtonState = 1;
 int fanSpeed = 0;
+int defaultDisplayCount = 0;
 int temp;
-int humd;
-// bool servoDirection = true;
+int countEstimatedTime = 0;
+float humd;
+float maxHumd = 0;
+float startHumd = 0;
 unsigned long currentMillis = 0;
-// unsigned long previousServoMillis = 0;
 unsigned long previousButtonMillis = 0;
-unsigned long infoButtonMillis = 0;
-unsigned long previousLEDMillis = 0;
-unsigned long previousBMEMillis = 0;
+unsigned long previousInfoButtonMillis = 0;
+unsigned long previousDHTMillis = 0;
 unsigned long previousDefaultDisplayMillis = 0;
-// int servoDegrees = 5;
-// int servoPosition = 90;
+unsigned long previousCountDownMillis = 0;
+unsigned long estimatedDryTime = 0;
+unsigned long remainedTime = 0;
+bool fanButtonWasPressed = false;
+bool infoButtonWasPressed = false;
 
+// Functions
 void onPressed() {
-  delay(30);
-  int reading = digitalRead(buttonPin);
-  // Serial.println(reading);
-  if (reading != lastButtonState) {
-    // reset the debouncing timer
-    previousButtonMillis = millis();
-    // Serial.print("Time is:");
-    // Serial.println(previousButtonMillis);
-  }
-  if ((millis() - previousButtonMillis) > buttonInterval) {
-    // Serial.print("inside");
-    // Serial.print("Diif is:");
-    // Serial.println(millis() - previousButtonMillis);
-    // if the button state has changed:
-    Serial.print("reading is ");
-    Serial.print(reading);
-    Serial.print("state is ");
-    Serial.println(buttonState);
-    // only toggle the LED if the new button state is HIGH
-    if (reading == buttonState) {
-     buttonState = reading;
-      if (reading == 1) {
-        if(buttonLevel == 10){
-          buttonLevel = 0;
-        }else{
-          buttonLevel = buttonLevel + 1;
-        }
-        Serial.print("Level is ");
-        Serial.println(buttonLevel);
-        sprintf(newMessage, "Fan %d", buttonLevel);
-        strcpy(curMessage, newMessage);
-        newMessageAvailable = true;
-        previousDefaultDisplayMillis = currentMillis;
-        goToDefaultStatus = 0;
-        P.displayText(curMessage, scrollAlign, scrollSpeed, scrollPause, scrollEffect, scrollRemoveEffect);
+  unsigned long currentTime = millis();
+  boolean buttonIsPressed = digitalRead(buttonPin) == LOW;
+
+  // Check for button state change and do debounce
+  if (buttonIsPressed != fanButtonWasPressed &&
+      currentTime  -  previousButtonMillis > buttonInterval){
+    // Button state has changed
+    fanButtonWasPressed = buttonIsPressed;
+    previousButtonMillis = currentTime;
+    if (fanButtonWasPressed){
+    }
+    else
+    {
+     if(buttonLevel == 10){
+        buttonLevel = 0;
+      }else{
+        buttonLevel = buttonLevel + 1;
       }
-    lastButtonState = reading;
+      Serial.print("Level is ");
+      Serial.println(buttonLevel);
+      sprintf(newMessage, "Fan %d", buttonLevel);
+      strcpy(curMessage, newMessage);
+      newMessageAvailable = true;
+      previousDefaultDisplayMillis = currentMillis;
+      goToDefaultStatus = 0;
+      P.displayText(curMessage, scrollAlign, scrollSpeed, scrollPause, scrollEffect, scrollRemoveEffect);
     }
   }
 }
 
 void onInfoBtnPressed() {
-  delay(30);
-  int reading = digitalRead(infoButtonPin);
-  if (reading != lastInfoButtonState) {
-    // reset the debouncing timer
-    infoButtonMillis = millis();
+  unsigned long currentTime = millis();
+  boolean buttonIsPressed = digitalRead(infoButtonPin) == LOW;
 
-  }
-  if ((millis() - infoButtonMillis) > buttonInterval) {
-    // only toggle the LED if the new button state is HIGH
-    if (reading == infoButtonState) {
-     infoButtonState = reading;
-      if (reading == 1) {
-        sprintf(newMessage, "Temperature : %d, Humidity : %d", temp, humd);
-        strcpy(curMessage, newMessage);
-        newMessageAvailable = true;
-        previousDefaultDisplayMillis = currentMillis;
-        goToDefaultStatus = 0;
-        P.displayText(curMessage, scrollAlign, scrollSpeed, scrollPause, scrollRemoveEffect, scrollRemoveEffect);
-      }
-    lastInfoButtonState = reading;
+  // Check for button state change and do debounce
+  if (buttonIsPressed != infoButtonWasPressed &&
+      currentTime  -  previousInfoButtonMillis > buttonInterval){
+    // Button state has changed
+    infoButtonWasPressed = buttonIsPressed;
+    previousButtonMillis = currentTime;
+    if (infoButtonWasPressed){
+    }
+    else
+    {
+      sprintf(newMessage, "Temperature : %d, Humidity : %s", temp, String(humd,2).c_str());
+      strcpy(curMessage, newMessage);
+      newMessageAvailable = true;
+      previousDefaultDisplayMillis = currentMillis;
+      goToDefaultStatus = 0;
+      P.displayText(curMessage, scrollAlign, scrollSpeed, scrollPause, scrollRemoveEffect, scrollRemoveEffect);
     }
   }
 }
 
-// void displayLED(){
-//   if (currentMillis - previousLEDMillis >= ledInterval) {
-//     // Display
-//     previousLEDMillis += ledInterval;
-//     P.displayAnimate();
-//     if (newMessageAvailable){
-//       strcpy(curMessage, newMessage);
-//       newMessageAvailable = false;
-//       // Serial.println("In display");
-//       // Serial.println(curMessage);
-//       // Serial.println(newMessage);
-//     }
-//     P.displayReset();
-//   }
-// }
-
 void goToDefaultDisplay(){
-  if(currentMillis - previousDefaultDisplayMillis >= goToDefaultDisplayInterval && goToDefaultStatus == 0){
-    Serial.println("Going Back to Default Screen.");
+  countEstimatedTime += 1;
+  if(countEstimatedTime == 20000){
+    previousDefaultDisplayMillis += goToDefaultDisplayInterval;
+    P.displayClear();
+    P.displayReset();
+    P.displayText(estimatedHHmmTime, PA_CENTER, scrollSpeed, 2500, PA_SCROLL_LEFT, PA_SCROLL_LEFT);
+    countEstimatedTime = 0;
+    goToDefaultStatus += 1;
+    if (goToDefaultStatus == 3){
+      goToDefaultStatus = 0;
+    }
+  }
+  else if(currentMillis - previousDefaultDisplayMillis >= goToDefaultDisplayInterval && goToDefaultStatus == 0){
+    previousDefaultDisplayMillis += goToDefaultDisplayInterval;
     goToDefaultStatus = 1;
+    defaultDisplayCount += 1;
     P.displayClear();
     P.displayReset();
     if (humd >= 80){
-      // char defaultNewMessage[Default_SIZE] = { "T   T" };
       sprintf(defaultNewMessage, "T    T");
-      // defaultNewMessage = "T    T";
     }
     else if (humd >= 50){
-      // char defaultNewMessage[Default_SIZE] = { "-   -" };
       sprintf(defaultNewMessage, "-    -");
     }
     else{
-      // char defaultNewMessage[Default_SIZE] = { "^   ^" };
       sprintf(defaultNewMessage, "^     ^");
     }
     strcpy(defaultCurMessage, defaultNewMessage);
     P.displayText(defaultCurMessage, PA_CENTER, scrollSpeed, 5000, PA_SCROLL_UP, PA_SCROLL_DOWN);
   }
-  // if (currentMillis - previousDefaultDisplayMillis >= goToDefaultDisplayInterval) {
-    // Display
-    // previousDefaultDisplayMillis += goToDefaultDisplayInterval;
 }
 
 void readDHT() {
-  if (currentMillis - previousBMEMillis >= bmeInterval){
-    previousBMEMillis += bmeInterval;
+  if (currentMillis - previousDHTMillis >= DHTInterval){
+    previousDHTMillis += DHTInterval;
+    if (maxHumd < dht.readHumidity()){
+      maxHumd = dht.readHumidity();
+      estimatedDryTime = calculateEstimatedDryTime(maxHumd);
+      Serial.print("Updated ");
+      Serial.println(estimatedHHmmTime);
+    }
     temp = dht.readTemperature();
     humd = dht.readHumidity();
     Serial.print(temp);
-    Serial.print("Hum is");
-    Serial.println(humd);
+    Serial.print(" / ");
+    Serial.print(humd);
+    Serial.print(" / ");
+    Serial.print(maxHumd);
+    Serial.print(" / ");
+    Serial.println(millis());
+  }
+}
+
+void calculateDryTime() {
+  if(humd > maxHumd){
+    //
+  }
+}
+
+unsigned long calculateEstimatedDryTime(float HUMIDITY) {
+  unsigned long estimatedCount = 3600000 / DHTInterval;
+  float estimatedHumd = 0;
+  while(millis()<=3600000){
+    if(millis() <= 10000){
+      estimatedHumd = (0.00000003*pow(estimatedCount/16,3)) + 
+      (-0.00007*pow(estimatedCount/16,2)) + 
+      (0.0067*estimatedCount/16) + 
+      (HUMIDITY + 4); // Simplified equation before storing data
+    }else{
+      estimatedHumd = (0.00000003*pow(estimatedCount/16,3)) + 
+      (-0.00007*pow(estimatedCount/16,2)) + 
+      (0.0067*estimatedCount/16) + 
+      (startHumd + (abs(HUMIDITY - startHumd)/2));
+    }
+    if(abs(estimatedHumd - startHumd) < 0.01){
+      return estimatedCount * DHTInterval;  // convert data row number to time
+    }
+    else if(estimatedCount >= 10000){
+      return 0; // If cannot find, return 0
+    }
+    else{
+      estimatedCount += 1;
+    }
+  }
+}
+
+void convertMillsToHHmm(unsigned long milli){
+  unsigned long minutes;
+  unsigned long hours;
+
+  minutes = milli / 60000;
+  hours = minutes / 60;
+  minutes %= 60;
+  hours %= 24;
+
+  sprintf(estimatedHHmmTime, "Estimated Time : %lu hours %lu minutes", hours, minutes);
+}
+
+void countDownTime(){
+  if (currentMillis - previousCountDownMillis >= countDownInterval){
+    previousCountDownMillis += countDownInterval;
+    remainedTime = estimatedDryTime - millis();
+    convertMillsToHHmm(remainedTime);
   }
 }
 
 void setup() {
   // Set Serial port
   Serial.begin(9600);
+  Serial.println("Activating ClothSense...");
+
+  // DHT Init
   pinMode(DHTPin, INPUT);
   dht.begin();
   readDHT();
-  // initialize the pushbutton pin as an input and External Interrupt:
-  // pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(buttonPin, INPUT);
+  temp = dht.readTemperature();
+  humd = dht.readHumidity();
+  startHumd = humd;
+  estimatedDryTime = calculateEstimatedDryTime(humd);
+  convertMillsToHHmm(estimatedDryTime);
+  Serial.println(estimatedHHmmTime);
+  Serial.print(temp);
+  Serial.print(" / ");
+  Serial.print(humd);
+  Serial.print(" / ");
+  Serial.println(millis());
+
+  // Buttons Init
+  pinMode (buttonPin, INPUT);
   pinMode(infoButtonPin, INPUT);
+
   // initialize the PWM pin as an output:
   pinMode(pwmPin, OUTPUT);
-  
-  // Set up external interrupt. On the event, onPressed function will executed.
-  // Unlike Poll, interrup will be running in between delay.
-  // attachInterrupt(digitalPinToInterrupt(buttonPin), onPressed, RISING);
-
-  // Set Servo
-  // servo.attach(servoPin);
-  // servo.write(0); //Return servo to its 0 location
 
   // Display Init
   P.begin();
@@ -225,21 +267,16 @@ void setup() {
 }
 
 void loop() {
-  // Serial.println(buttonState);
   currentMillis = millis();
 
-  // Serial.println(digitalRead(buttonPin));
-  // if(digitalRead(buttonPin) == 1){
-  //   onPressed();    
-  // }
-  // sweepServo();
   onPressed();
-  // displayLED();
-  goToDefaultDisplay();
   onInfoBtnPressed();
-  readDHT();
 
-  fanSpeed = buttonLevel * 25.5;
+  goToDefaultDisplay();
+  readDHT();
+  countDownTime();
+
+  fanSpeed = buttonLevel * 25.5; //buttonLevel range is 0 to 10
   analogWrite(pwmPin, fanSpeed);
   if (P.displayAnimate()){
     P.displayReset();
